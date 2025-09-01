@@ -2,6 +2,8 @@ import { X } from "lucide-react";
 import { Button } from "./Button";
 import { useRef, useState } from "react";
 import { BACKEND_URL } from "./config";
+import axios from "axios";
+import React from "react";
 
 //@ts-expect-error erasableSyntaxOnly
 enum ContentType {
@@ -9,9 +11,12 @@ enum ContentType {
     Twitter = "twitter"
 }
 
+interface CreateContentModal {
+  open: boolean;
+  onClose: (() => void);
+}
 
-
-export function CreateContentModal({ open, onClose }) {
+export function CreateContentModal({ open, onClose }: CreateContentModal) {
     const titleRef = useRef<HTMLInputElement>(null);
     const linkRef = useRef<HTMLInputElement>(null);
     const [type, setType] = useState(ContentType.Youtube);
@@ -26,11 +31,11 @@ export function CreateContentModal({ open, onClose }) {
             type
         }, {
             headers: {
-                "Authorization": localStorage.getItem("token")
+                "Authorization": localStorage.getItem("token") || ""
             }
-        })
-
-        onClose()
+        }
+      );
+        onClose();
     }
   return (
     <div>
@@ -49,8 +54,8 @@ export function CreateContentModal({ open, onClose }) {
                 </div>
               </div>
               <div>
-                <Input reference={titleRef} placeholder="Title" />
-                <Input reference={linkRef} placeholder="Link" />
+                <Input ref={titleRef} placeholder="Title" />
+                <Input ref={linkRef} placeholder="Link" />
               </div>
               <h1>Type</h1>
               <div className="flex gap-1 p-4">
@@ -58,7 +63,7 @@ export function CreateContentModal({ open, onClose }) {
                 "primary" : "secondary"} onClick={() => {
                     setType(ContentType.Youtube)
                 }}></Button>
-              <Button text="Twitter" variant={ type === ContentType.Youtube ? 
+              <Button text="Twitter" variant={ type === ContentType.Twitter ? 
                 "primary" : "secondary"} onClick={() => {
                     setType(ContentType.Twitter)
                 }}></Button>
@@ -74,21 +79,18 @@ export function CreateContentModal({ open, onClose }) {
   );
 }
 
-function Input({
-  onChange,
-  placeholder,
-}: {
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder: string;
-}) {
-  return (
-    <div>
-      <input
-        placeholder={placeholder}
-        type="text"
-        className="px-4 py-2 border rounded m-2"
-        onChange={onChange}
-      />
-    </div>
-  );
-}
+const Input = React.forwardRef<HTMLInputElement, { placeholder: string }>(
+  ({ placeholder }, ref) => {
+    return (
+      <div>
+        <input
+          placeholder={placeholder}
+          type="text"
+          className="px-4 py-2 border rounded m-2"
+          ref={ref}
+        />
+      </div>
+    );
+  }
+);
+Input.displayName = "Input";
