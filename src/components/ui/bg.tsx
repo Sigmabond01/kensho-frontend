@@ -1,6 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function FloatingPaths({ position }: { position: number }) {
     const paths = Array.from({ length: 28 }, (_, i) => ({
@@ -51,11 +53,18 @@ function FloatingPaths({ position }: { position: number }) {
 }
 
 export function KenshoHero() {
+    const navigate = useNavigate();
     const kenshoTitle = "KENSHO"; // Kensho in Japanese characters
     const subtitle = "見性";
+    const [isClicked, setIsClicked] = useState(false);
+
+    const handleJourneyStart = () => {
+    setIsClicked(true);
+    navigate('/signup')
+};
 
     return (
-        <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden 
+        <div className="relative font-cinzelreg min-h-screen w-full flex items-center justify-center overflow-hidden 
                         bg-gradient-to-br from-stone-50 via-amber-50/50 to-orange-50/30 
                         dark:from-neutral-950 dark:via-amber-950/10 dark:to-orange-950/20">
             
@@ -73,7 +82,7 @@ export function KenshoHero() {
                  }}
             />
 
-            <div className="relative z-10 container mx-auto px-4 md:px-6 text-center">
+            <div className="relative z-30 container mx-auto px-4 md:px-6 text-center">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -87,7 +96,7 @@ export function KenshoHero() {
                         transition={{ delay: 0.3, duration: 1.2 }}
                         className="mb-6"
                     >
-                        <h1 className="text-8xl sm:text-9xl md:text-[12rem] font-light tracking-
+                        <h1 className="text-8xl sm:text-9xl md:text-[12rem] font-light tracking-tight
                                      text-transparent bg-clip-text bg-gradient-to-br 
                                      from-amber-800 via-orange-700 to-red-800
                                      dark:from-amber-200 dark:via-orange-300 dark:to-red-400
@@ -105,7 +114,7 @@ export function KenshoHero() {
                     >
                         <p className="text-2xl md:text-3xl font-light tracking-tight 
                                     text-stone-700 dark:text-stone-300 
-                                    font-serif">
+                                    font-cinzelreg">
                             {subtitle}
                         </p>
                         <div className="w-24 h-px bg-gradient-to-r from-transparent via-amber-600 to-transparent 
@@ -134,7 +143,11 @@ export function KenshoHero() {
                         <div className="relative overflow-hidden rounded-2xl p-px 
                                       bg-gradient-to-r from-amber-600 via-orange-600 to-red-600
                                       dark:from-amber-500 dark:via-orange-500 dark:to-red-500">
-                            <button
+                            <motion.button
+                                onClick={handleJourneyStart}
+                                disabled={isClicked}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
                                 className="relative rounded-[15px] px-12 py-4 text-lg font-medium
                                          bg-white hover:bg-stone-50 
                                          dark:bg-neutral-900 dark:hover:bg-neutral-800
@@ -142,22 +155,38 @@ export function KenshoHero() {
                                          dark:text-amber-200 dark:hover:text-orange-200
                                          transition-all duration-500 ease-out
                                          group-hover:shadow-xl group-hover:-translate-y-1
-                                         border-0 tracking-wide cursor-pointer"
+                                         border-0 tracking-wide cursor-pointer
+                                         disabled:opacity-70 disabled:cursor-not-allowed
+                                         focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
                             >
                                 <span className="flex items-center gap-3">
-                                    Begin Your Journey
-                                    <motion.span
-                                        className="text-xl"
-                                        animate={{ x: [0, 5, 0] }}
-                                        transition={{ 
-                                            duration: 2, 
-                                            repeat: Infinity, 
-                                            ease: "easeInOut" 
-                                        }}
-                                    >
-                                    </motion.span>
+                                    {isClicked ? (
+                                        <>
+                                            <motion.div
+                                                animate={{ rotate: 360 }}
+                                                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                                className="w-5 h-5 border-2 border-current border-t-transparent rounded-full"
+                                            />
+                                            Starting Journey...
+                                        </>
+                                    ) : (
+                                        <>
+                                            Begin Your Journey
+                                            <motion.span
+                                                className="text-xl"
+                                                animate={{ x: [0, 5, 0] }}
+                                                transition={{ 
+                                                    duration: 2, 
+                                                    repeat: Infinity, 
+                                                    ease: "easeInOut" 
+                                                }}
+                                            >
+                                                →
+                                            </motion.span>
+                                        </>
+                                    )}
                                 </span>
-                            </button>
+                            </motion.button>
                         </div>
                     </motion.div>
 

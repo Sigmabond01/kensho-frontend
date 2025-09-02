@@ -1,1 +1,20 @@
 @import "tailwindcss";
+
+@font-face {
+  font-family: 'Cinzel';
+  src: url('/fonts/Cinzel.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Cinzel-reg';
+  src: url('/fonts/Cinzel-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@theme {
+  --font-cinzel: 'Cinzel', serif;
+  --font-cinzelreg: 'Cinzel-reg'
+}
